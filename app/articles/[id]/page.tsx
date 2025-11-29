@@ -1,12 +1,9 @@
-
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Sidebar from '@/components/Sidebar';
 import Hero from '@/app/assets/hero.svg'
-
-import { usePost } from '@/hooks/usePosts';
 
 interface ArticlePageProps {
   params: {
@@ -17,17 +14,34 @@ interface ArticlePageProps {
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL
 
 export async function generateStaticParams() {
-  const articles = await fetch(`${BASE_URL}/posts`).then(res => res.json());
-  return articles.items.map((article: any) => ({
-    id: article.id,
-  }));
+  try {
+    const res = await fetch(`${BASE_URL}/posts`);
+    if (!res.ok) return [];
+    const articles = await res.json();
+    return articles.items.map((article: any) => ({
+      id: article.id,
+    }));
+  } catch (error) {
+    console.error('Error fetching posts for static params:', error);
+    return [];
+  }
 }
 
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
   
-  const res = await fetch(`${BASE_URL}/posts/${params.id}`);
-  const article = await res.json();
+  let article;
+  try {
+    const res = await fetch(`${BASE_URL}/posts/${params.id}`, { next: { revalidate: 60 } });
+    if (!res.ok) {
+      if (res.status === 404) notFound();
+      throw new Error('Failed to fetch article');
+    }
+    article = await res.json();
+  } catch (error) {
+    console.error('Error fetching article:', error);
+    notFound();
+  }
 
   if (!article) {
     notFound();
@@ -64,9 +78,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                       day: 'numeric'
                     })}</p>
                   </div>
-                  {/* {article.readTime && (
-                    <span className="text-sm text-gray-500">• {article.readTime}</span>
-                  )} */}
                 </div>
 
                 <Image
@@ -116,18 +127,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           </div>
         </div>
       </article>
-
-      {/* Read More Section */}
-      {/* <section className="bg-white py-20">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Read More</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {data.map((article) => (
-              <ArticleCard key={article.id} article={article} />
-            ))}
-          </div>
-        </div>
-      </section> */}
 
       <Footer />
     </div>
