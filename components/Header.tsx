@@ -9,9 +9,9 @@ import Logo from '@/app/assets/logo.svg'
 
 export default function Header() {
   return (
-    <header className="bg-white border-b py-8 border-gray-100">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+    <header className="bg-white border-b py-2 border-gray-100">
+      <div className="container mx-auto px-4 sm:px-5 lg:px-6">
+        <div className="flex justify-between items-center h-14">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <Image 

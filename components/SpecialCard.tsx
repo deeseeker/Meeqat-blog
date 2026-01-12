@@ -20,105 +20,75 @@ interface ArticleCardProps {
 
 export default function SpecialCard({ article, featured = false }: ArticleCardProps) {
   const cardClasses = featured
-    ? "group cursor-pointer"
-    : "group cursor-pointer bg-white rounded-xl h-full overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100";
+    ? "group cursor-pointer block h-full"
+    : "group cursor-pointer block h-full bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100";
 
   return (
-    <Link href={`/articles/${article.id}`}>
-      <div className={cardClasses}>
-        <div className="relative overflow-hidden rounded-xl">
-          {/* Background Image Container */}
-            <div 
-            className="w-full h-[359px] bg-cover bg-center bg-no-repeat relative group-hover:scale-105 transition-transform duration-300"
-            style={{
-              backgroundImage: `linear-gradient(to bottom, rgba(0,0,0.2,0.1), rgba(0,0,0.2,0.9)), url('${Hero}')`
-            }}
-            >
-            {/* Category Badge */}
-            <div className="absolute top-4 left-4">
-              <span className="text-[#FF9F43] bg-white px-3 py-1 rounded-full text-sm font-medium">
-                {article.categories[0]}
-              </span>
-            </div>
-            
-            {/* Read Time Badge for Featured */}
-            {/* {featured && article.readTime && (
-              <div className="absolute top-4 right-4">
-                <span className="bg-white bg-opacity-90 text-gray-700 px-3 py-1 rounded-full text-sm font-medium">
-                  {article.readTime}
-                </span>
-              </div>
-            )} */}
-            
-            {/* Content Overlay */}
-            <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-              <h3 className={`font-bold mb-3 group-hover:text-orange-200 transition-colors ${
-                featured ? 'text-3xl leading-tight' : 'text-xl'
-              }`}>
-                {article.title}
-              </h3>
-              
-              <p className={`mb-4 leading-relaxed text-gray-200 ${
-                featured ? 'text-lg' : 'text-base'
-              }`}>
-                {article.excerpt}
-              </p>
-              
-              {featured && (
-                <div className="flex items-center text-orange-300 font-medium mb-6 group-hover:text-orange-200 transition-colors">
-                  <span>Read More</span>
-                  <ArrowUpRight className="w-4 h-4 ml-1 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                </div>
-              )}
-              
-              {/* Author Info */}
-              <div className="flex items-center space-x-3">
-                <Image
-                  src={Hero }
-                  alt={article.authorId}
-                  width={40}
-                  height={40}
-                  className="rounded-full object-cover w-10 h-10 border-2 border-white border-opacity-30"
-                />
-                <div>
-                  <p className="font-medium text-white">{article.author.firstName} {article.author.lastName}</p>
-                  <p>{new Date(article.updatedAt).toLocaleDateString(undefined, {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric'
-                  })}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+    <Link href={`/articles/${article.id}`} className={cardClasses}>
+      <div className="relative h-[360px] w-full overflow-hidden rounded-xl">
+        {/* Background Image using Next/Image for optimization and hover effect */}
+        <Image
+          src={Hero}
+          alt={article.title}
+          fill
+          className="object-cover transition-transform duration-500 group-hover:scale-110"
+          priority={featured}
+        />
         
-        {/* Non-featured cards get white background content area */}
-        {/* {!featured && (
-          <div className="p-6 bg-white">
-            <h3 className="font-bold text-gray-900 mb-3 group-hover:text-[#FF9F43] transition-colors text-xl">
+        {/* Modern Gradient Overlay: Clearer top, readable bottom */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-90 transition-opacity duration-300" />
+
+        {/* Category Badge - Glassmorphism */}
+        <div className="absolute top-4 left-4 z-10">
+          <span className="backdrop-blur-md bg-white/20 text-white border border-white/30 px-3 py-1 rounded-full text-xs font-semibold tracking-wide uppercase shadow-sm">
+            {article.categories[0]}
+          </span>
+        </div>
+
+        {/* Content Container */}
+        <div className="absolute bottom-0 left-0 right-0 p-5 text-white z-10 flex flex-col justify-end h-full">
+          
+          <div className="mt-auto transform transition-transform duration-300 translate-y-2 group-hover:translate-y-0">
+            <h3 className={`font-bold mb-2 text-white leading-snug group-hover:text-[#FF9F43] transition-colors duration-300 ${
+              featured ? 'text-3xl' : 'text-xl'
+            }`}>
               {article.title}
             </h3>
             
-            <p className="text-gray-600 mb-4 leading-relaxed text-base">
+            <p className={`text-gray-200 line-clamp-2 mb-4 font-light leading-relaxed ${
+               featured ? 'text-base opacity-90' : 'text-sm opacity-80'
+            }`}>
               {article.excerpt}
             </p>
-            
-            <div className="flex items-center space-x-3">
-              <Image
-                src={article.author.avatar}
-                alt={article.author.name}
-                width={40}
-                height={40}
-                className="rounded-full object-cover w-10 h-10"
-              />
-              <div>
-                <p className="font-medium text-gray-900">{article.author.name}</p>
-                <p className="text-sm text-gray-500">{article.author.date}</p>
+
+            <div className="flex items-center justify-between border-t border-white/20 pt-4 mt-2">
+               {/* Author Info */}
+              <div className="flex items-center space-x-3">
+                <div className="relative w-8 h-8 rounded-full overflow-hidden border border-white/50">
+                   <Image
+                      src={Hero}
+                      alt={article.authorId}
+                      fill
+                      className="object-cover"
+                    />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-semibold text-white tracking-wide">{article.author.firstName} {article.author.lastName}</span>
+                  <span className="text-[10px] text-gray-300 uppercase tracking-wider">{new Date(article.updatedAt).toLocaleDateString(undefined, {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                  })}</span>
+                </div>
               </div>
+              
+              {/* Arrow Icon that appears/moves on hover */}
+               <div className="bg-white/10 p-2 rounded-full opacity-0 group-hover:opacity-100 transform translate-x-[-10px] group-hover:translate-x-0 transition-all duration-300">
+                  <ArrowUpRight className="w-4 h-4 text-[#FF9F43]" />
+               </div>
             </div>
           </div>
-        )} */}
+        </div>
       </div>
     </Link>
   );

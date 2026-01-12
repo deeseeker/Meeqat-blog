@@ -48,17 +48,17 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   }
 
   return (
-    <div className="min-h-screen container mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+    <div className="min-h-screen container mx-auto px-4 sm:px-5 lg:px-6 pb-6">
       <Header />
       
-      <article className="px-4 mt-8">
+      <article className="px-4 mt-4">
         <div className="">
           {/* Main Content */}
           <div className="lg:col-span-2">
             <div className="">
               {/* Article Header */}
-              <div className="mb-8">
-                <h1 className="text-3xl font-bold text-gray-900 mb-4 leading-tight">
+              <div className="mb-4">
+                <h1 className="text-2xl font-bold text-gray-900 mb-3 leading-tight">
                   {article.title}
                 </h1>
                 
@@ -85,11 +85,11 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                   alt={article.title}
                   width={800}
                   height={400}
-                  className="w-full h-64 sm:h-80 object-cover rounded-xl mb-8"
+                  className="w-full h-56 sm:h-72 object-cover rounded-xl mb-6"
                 />
               </div>
 
-              <div className='grid grid-cols-1 lg:grid-cols-3 gap-12'>
+              <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
                  {/* Article Content */}
               <div className="prose col-span-2 prose-lg max-w-none">
                 {article.content ? (

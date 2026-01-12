@@ -13,51 +13,41 @@ interface ArticleCardProps {
   featured?: boolean;
 }
 
-export default function ArticleCard({ article, featured = false }: ArticleCardProps) {
+export default function HeroSection({ article, featured = false }: ArticleCardProps) {
   
   return (
     <Link href={`/articles/${article?.id}`} className="group block">
-      <div className={`flex flex-col lg:flex-row items-center
-      `}>
+      <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
         {/* Image Section */}
-        <div className="relative w-full lg:w-3/5 overflow-hidden rounded-2xl p-4 md:p-6 hover:shadow-lg transition-shadow border border-gray-200 hover:shadow-md">
+        <div className="relative w-full lg:w-3/5 overflow-hidden rounded-2xl">
             <Image 
               src={Hero} 
               alt={article?.title ?? 'Article Image'}
-              width={600}
-              height={400}
-              className="w-full h-auto"
+              width={800}
+              height={500}
+              className="w-full h-auto object-cover transform transition-transform duration-700 group-hover:scale-105"
             />
-
         </div>
 
         {/* Content Section */}
-        <div className="w-full h-full relative py-12 px-6 bg-gray-50 lg:w-2/5">
-            <div className='w-fit flex items-center gap-4 absolute -top-6 rounded-full px-2 py-2 bg-gray-100'>
-            <span className="bg-[#FF9F43] text-white px-3 py-1 rounded-full text-xs font-semibold">
-              New! 
-            </span>
-            {/* {article.readTime && (
-              <span className="text-xs text-gray-500 pr-2 font-medium">
-                {article.readTime}
+        <div className="w-full lg:w-2/5 flex flex-col justify-center">
+            <div className="mb-4">
+              <span className="inline-block bg-[#FF9F43] text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+                New!
               </span>
-          )} */}
-        </div>
-          <h3 className={`font-medium text-gray-900 mb-3 group-hover:text-[#FF9F43] transition-colors ${
-            featured ? 'text-2xl lg:text-3xl xl:text-4xl' : 'text-xl md:text-2xl'
-          }`}>
+            </div>
+          
+          <h1 className="text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 mb-6 group-hover:text-[#FF9F43] transition-colors leading-tight">
             {article?.title}
-          </h3>
-          <p className={`text-gray-600 mb-4 leading-relaxed ${
-            featured ? 'text-base lg:text-lg mb-6 lg:mb-8' : 'text-sm md:text-base mb-4'
-          }`}>
+          </h1>
+          
+          <p className="text-gray-500 text-base lg:text-lg mb-8 leading-relaxed line-clamp-3">
             {article?.excerpt}
           </p>
-          <div className="flex items-center text-[#FF9F43] font-semibold hover:text-orange-600 transition group">
-            <span className={featured ? 'text-lg font-medium' : ''}>Read More</span>
-            <ArrowUpRight className={`ml-1 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform ${
-              featured ? 'w-5 h-5' : 'w-4 h-4'
-            }`} />
+          
+          <div className="flex items-center text-[#FF9F43] font-bold text-lg hover:text-orange-600 transition-colors group">
+            <span>Read More</span>
+            <ArrowUpRight className="ml-2 w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
           </div>
         </div>
       </div>
