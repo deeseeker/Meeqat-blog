@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import type { Metadata, ResolvingMetadata } from 'next';
 import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -24,6 +25,38 @@ export async function generateStaticParams() {
   } catch (error) {
     console.error('Error fetching posts for static params:', error);
     return [];
+  }
+}
+
+
+export async function generateMetadata(
+  { params }: ArticlePageProps,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const id = params.id
+ 
+  try {
+    const res = await fetch(`${BASE_URL}/posts/${id}`, { next: { revalidate: 60 } });
+    if (!res.ok) {
+      return {
+        title: 'Article Not Found',
+      }
+    }
+    const article = await res.json();
+
+    return {
+      title: article.title,
+      description: article.excerpt || article.content?.slice(0, 160),
+      openGraph: {
+        title: article.title,
+        description: article.excerpt || article.content?.slice(0, 160),
+        images: [Hero.src],
+      },
+    }
+  } catch (error) {
+    return {
+      title: 'Error loading article',
+    }
   }
 }
 
